@@ -13,6 +13,12 @@ if audio_file:
         audio, min_silence_len=100, silence_thresh=-70, keep_silence=100
     )
 
-    for audio_pice in audio_pieces:
+    for piece_id, audio_pice in enumerate(audio_pieces):
+        id_col, audio_col = st.columns([1, 9], vertical_alignment="top", gap="small")
         audio_data = audio_pice.export()
-        st.audio(audio_data.read())
+
+        with id_col:
+            st.subheader(piece_id + 1, divider="gray")
+
+        with audio_col:
+            st.audio(audio_data.read())
