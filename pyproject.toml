@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "silence-split-app"
+version = "0.1.0"
+description = ""
+authors = ["ryu <43063676+kojipy@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "^1.37.0"
+pydub = "^0.25.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
