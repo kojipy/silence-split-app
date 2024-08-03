@@ -1,5 +1,25 @@
+import librosa
+import numpy as np
+import pandas as pd
 import streamlit as st
 from pydub import AudioSegment, silence
+
+
+def pitch_chart(audio_segment):
+    audio_data = audio_segment.export()
+    y, sr = librosa.load(audio_data)
+
+    f0, _, _ = librosa.pyin(
+        y, fmin=50, fmax=2000, frame_length=2048 * 2, sr=sr, center=False
+    )
+
+    audio_sec = len(y) / sr
+
+    x = np.linspace(0, audio_sec, len(f0))
+    data = pd.DataFrame({"pitch": f0, "sec": x})
+
+    st.line_chart(data, x="sec", y="pitch")
+
 
 # 音声ファイルのアップロード
 audio_file = st.file_uploader(
@@ -13,12 +33,13 @@ if audio_file:
         audio, min_silence_len=100, silence_thresh=-70, keep_silence=100
     )
 
-    for piece_id, audio_pice in enumerate(audio_pieces):
-        id_col, audio_col = st.columns([1, 9], vertical_alignment="top", gap="small")
-        audio_data = audio_pice.export()
+    pice_ids = list(map(str, range(1, len(audio_pieces) + 1)))
+    tabs = st.tabs(pice_ids)
+    for piece_id, tab in enumerate(tabs):
+        with tab:
+            audio_segment = audio_pieces[piece_id]
 
-        with id_col:
-            st.subheader(piece_id + 1, divider="gray")
+            pitch_chart(audio_segment)
 
-        with audio_col:
+            audio_data = audio_segment.export()
             st.audio(audio_data.read())
