@@ -8,7 +8,7 @@ def pitch_chart(audio_segment):
     audio_data = audio_segment.export()
     y, sr = librosa.load(audio_data)
 
-    f0, _, _ = librosa.pyin(y, fmin=50, fmax=2000, sr=sr, center=False)
+    f0, _, _ = librosa.pyin(y, fmin=50, fmax=2000, sr=sr, center=True)
 
     times = librosa.times_like(f0, sr=sr)
     data = pd.DataFrame({"pitch": f0, "times": times})
