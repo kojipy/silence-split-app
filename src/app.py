@@ -9,16 +9,12 @@ def pitch_chart(audio_segment):
     audio_data = audio_segment.export()
     y, sr = librosa.load(audio_data)
 
-    f0, _, _ = librosa.pyin(
-        y, fmin=50, fmax=2000, frame_length=2048 * 2, sr=sr, center=False
-    )
+    f0, _, _ = librosa.pyin(y, fmin=50, fmax=2000, sr=sr, center=False)
 
-    audio_sec = len(y) / sr
+    times = librosa.times_like(f0, sr=sr)
+    data = pd.DataFrame({"pitch": f0, "times": times})
 
-    x = np.linspace(0, audio_sec, len(f0))
-    data = pd.DataFrame({"pitch": f0, "sec": x})
-
-    st.line_chart(data, x="sec", y="pitch")
+    st.line_chart(data, x="times", y="pitch")
 
 
 # 音声ファイルのアップロード
